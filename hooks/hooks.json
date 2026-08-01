@@ -1,0 +1,16 @@
+{
+  "description": "Netir : rappel de fin de session pour consigner le carnet de mission (une fois par session).",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/logbook-session-nudge.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
