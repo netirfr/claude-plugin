@@ -1,0 +1,24 @@
+# Crée une release GitHub quand un tag vX.Y.Z est poussé sur le miroir.
+#
+# Le tag est poussé par la CI GitLab du monorepo (subtree split) via une clé de
+# déploiement. Un push par deploy key déclenche bien les workflows Actions (contrairement
+# au token intégré). La release utilise le GITHUB_TOKEN du runner : aucun secret à gérer.
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --generate-notes --verify-tag

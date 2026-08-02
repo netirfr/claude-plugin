@@ -1,0 +1,13 @@
+{
+  "name": "netir",
+  "owner": { "name": "Netir" },
+  "description": "Outils Netir pour les freelances : carnet de mission, devis et factures pilotés depuis l'agent.",
+  "plugins": [
+    {
+      "name": "netir",
+      "source": ".",
+      "description": "Cockpit Netir du freelance : consigne le carnet de mission en fin de session, et rappelle de le tenir à jour.",
+      "version": "0.1.0"
+    }
+  ]
+}

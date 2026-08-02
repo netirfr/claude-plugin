@@ -29,7 +29,7 @@ où `NETIR_API_URL` est l'adresse de l'API Netir et `NETIR_API_KEY` ta clé `nk_
 Le plugin n'apporte que le carnet de mission de fin de session (un skill et un hook `Stop`, sans secret) ; la connexion à Netir reste celle de l'étape 1.
 
 ```sh
-claude plugin marketplace add https://gitlab.com/getnobullshit/platform.git
+claude plugin marketplace add https://github.com/netirfr/claude-plugin.git
 claude plugin install netir@netir
 ```
 
@@ -37,7 +37,15 @@ claude plugin install netir@netir
 
 À la fin d'une session où tu as travaillé avec Netir, l'agent te propose, une seule fois, de mettre à jour ton carnet de mission. Tu peux accepter, ajuster le contenu, ou refuser. Pour ne plus être relancé aujourd'hui, crée le fichier `snooze-AAAA-MM-JJ` (date du jour) dans le dossier de données du plugin.
 
-## À confirmer avant distribution
+## Distribution (miroir public)
 
-- L'adresse publique de l'API Netir (`NETIR_API_URL`).
-- L'accès au dépôt du marketplace : `claude plugin marketplace add` doit viser un dépôt que le freelance peut cloner, et son manifeste `.claude-plugin/marketplace.json` doit être à la racine du dépôt. Le monorepo `getnobullshit/platform` étant privé, publier le plugin sur un dépôt (ou une URL) accessible aux freelances avant de communiquer l'étape 2.
+Le monorepo `getnobullshit/platform` est privé, donc les freelances ne peuvent pas le cloner comme marketplace. Ce dossier `claude-plugin/netir/` est publié en lecture seule sur **`https://github.com/netirfr/claude-plugin`** par un *subtree split* Symfony-like (`splitsh-lite`), piloté par la CI (`claude-plugin/.gitlab-ci.yml`) :
+
+- **Mise à jour continue** : à chaque commit sur `main` qui touche `claude-plugin/netir/**`, la CI resplit et pousse le résultat sur `main` du dépôt GitHub. Le monorepo reste la source unique de vérité, le dépôt GitHub est un miroir jamais édité à la main.
+- **Release** : un tag `netir-plugin-vX.Y.Z` sur le monorepo pousse le même split sur un tag `vX.Y.Z` du dépôt GitHub ; un workflow GitHub Actions (`.github/workflows/release.yml`) crée alors la release. Aligner ce tag avec le champ `version` de `.claude-plugin/plugin.json` et de `.claude-plugin/marketplace.json`.
+
+Le push CI s'authentifie par une **clé de déploiement SSH** (write) portée par le dépôt GitHub, sans token à faire tourner : la clé privée vit dans la variable CI `GITHUB_DEPLOY_KEY_B64` (masquée + protégée). La release GitHub s'appuie sur le `GITHUB_TOKEN` intégré au runner Actions.
+
+Le dossier est auto-suffisant comme marketplace. Son `.claude-plugin/marketplace.json` (à la racine du split) déclare le plugin `netir` avec `source: "."`. Le plugin ne contient aucun secret (la clé du freelance reste dans `claude mcp add`), sa publication publique est donc sans risque.
+
+Reste à confirmer côté produit, l'adresse publique de l'API Netir (`NETIR_API_URL`) utilisée dans la commande `claude mcp add` de l'étape 1.
