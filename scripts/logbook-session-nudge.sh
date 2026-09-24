@@ -7,6 +7,9 @@ set -u
 
 input="$(cat)"
 
+# JSON string escaping without jq: backslashes and quotes escaped, control characters dropped.
+json_escape() { printf '%s' "$1" | tr -d '\000-\037' | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'; }
+
 # Extraction bornée depuis le JSON stdin, sans dépendance à jq.
 sid="$(printf '%s' "$input" | sed -n 's/.*"session_id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -c 128)"
 transcript="$(printf '%s' "$input" | sed -n 's/.*"transcript_path"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -c 4096)"
@@ -48,10 +51,12 @@ if [ "$used_netir" -eq 1 ] && [ "$published" -eq 0 ]; then
   # (souvent avant tout usage de Netir), et la relance de fin de session ne
   # partirait jamais.
   : > "$sentinel"
-  reason="Avant de terminer cette session Netir : propose au freelance de consigner son avancement dans son carnet de mission. Lance le skill netir-logbook (appelle prepare_logbook_update, puis si plusieurs missions actives demande laquelle via AskUserQuestion, puis publish_logbook_update apres confirmation explicite). Si le freelance refuse, termine normalement. Si le freelance ne veut plus etre relance aujourd hui, cree le fichier $data_dir/snooze-$today avant de terminer."
+  reason="Avant de terminer cette session Netir, lance le skill netir-logbook. Si le freelance ne veut plus être relancé aujourd'hui, crée le fichier $data_dir/snooze-$today avant de terminer."
   # Exit 0 with a decision object on stdout: Claude Code parses stdout for the
   # block decision AND the reason, so the wrap-up guidance reaches the model.
-  printf '{"decision":"block","reason":"%s"}\n' "$reason"
+  # The reason embeds $data_dir, which comes from the environment: escape it so a quote
+  # or backslash in the path can't break the JSON and silently drop the block decision.
+  printf '{"decision":"block","reason":"%s"}\n' "$(json_escape "$reason")"
   exit 0
 fi
 

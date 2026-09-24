@@ -15,14 +15,14 @@ Deux morceaux : le serveur MCP (l'accès à Netir) et le plugin (le carnet de mi
 
 ### 1. Le serveur MCP
 
-Le plus simple, en une commande :
+Le plus simple, en une commande (la page « Connecter mon agent » l'affiche aussi, clé comprise, prête à copier) :
 
 ```sh
-claude mcp add --transport http netir "$NETIR_API_URL/api/v3/mcp" \
+claude mcp add --transport http netir "https://app.netir.fr/api/v3/mcp" \
   --header "Authorization: Bearer $NETIR_API_KEY"
 ```
 
-où `NETIR_API_URL` est l'adresse de l'API Netir et `NETIR_API_KEY` ta clé `nk_…`. La clé étant propre à chaque freelance, elle reste dans ta configuration locale (`claude mcp add`), jamais dans le plugin partagé.
+où `NETIR_API_KEY` est ta clé `nk_…`. La clé étant propre à chaque freelance, elle reste dans ta configuration locale (`claude mcp add`), jamais dans le plugin partagé.
 
 ### 2. Le plugin
 
@@ -35,7 +35,7 @@ claude plugin install netir@netir
 
 ## Ce qui se passe en fin de session
 
-À la fin d'une session où tu as travaillé avec Netir, l'agent te propose, une seule fois, de mettre à jour ton carnet de mission. Tu peux accepter, ajuster le contenu, ou refuser. Pour ne plus être relancé aujourd'hui, crée le fichier `snooze-AAAA-MM-JJ` (date du jour) dans le dossier de données du plugin.
+À la fin d'une session où tu as travaillé avec Netir, l'agent te propose, une seule fois, de mettre à jour ton carnet de mission. Tu peux accepter, ajuster le contenu, ou refuser. Pour ne plus être relancé aujourd'hui, crée le fichier `snooze-AAAA-MM-JJ` (date du jour) dans le dossier de données du plugin : `$CLAUDE_PLUGIN_DATA`, ou à défaut `$TMPDIR/netir-logbook` (`/tmp/netir-logbook` si `TMPDIR` n'est pas défini).
 
 ## Distribution (miroir public)
 
@@ -47,5 +47,3 @@ Le monorepo `getnobullshit/platform` est privé, donc les freelances ne peuvent 
 Le push CI s'authentifie par une **clé de déploiement SSH** (write) portée par le dépôt GitHub, sans token à faire tourner : la clé privée vit dans la variable CI `GITHUB_DEPLOY_KEY_B64` (masquée + protégée). La release GitHub s'appuie sur le `GITHUB_TOKEN` intégré au runner Actions.
 
 Le dossier est auto-suffisant comme marketplace. Son `.claude-plugin/marketplace.json` (à la racine du split) déclare le plugin `netir` avec `source: "."`. Le plugin ne contient aucun secret (la clé du freelance reste dans `claude mcp add`), sa publication publique est donc sans risque.
-
-Reste à confirmer côté produit, l'adresse publique de l'API Netir (`NETIR_API_URL`) utilisée dans la commande `claude mcp add` de l'étape 1.
