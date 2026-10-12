@@ -37,6 +37,8 @@ claude plugin install netir@netir
 
 À la fin d'une session où tu as travaillé avec Netir, l'agent te propose, une seule fois, de mettre à jour ton carnet de mission. Tu peux accepter, ajuster le contenu, ou refuser.
 
+Les tâches restées ouvertes au rapport précédent (« reportées ») sont reprises telles quelles : l'agent les fait avancer (en cours, terminée, bloquée, abandonnée) au lieu d'en créer de nouvelles, ton carnet reste sans doublon.
+
 Si la session fait apparaître une opportunité commerciale concrète (besoin de logiciel ou de formation, nouveau projet, prestataire qui arrive chez ton client), l'agent la propose aussi dans l'aperçu. Elle part à ton apporteur d'affaires, jamais au client, et tu peux la retirer ou la reformuler avant de publier. Sans signal réel dans la session, il n'en propose pas.
 
 Pour ne plus être relancé aujourd'hui, crée le fichier `snooze-AAAA-MM-JJ` (date du jour) dans le dossier de données du plugin : `$CLAUDE_PLUGIN_DATA`, ou à défaut `$TMPDIR/netir-logbook` (`/tmp/netir-logbook` si `TMPDIR` n'est pas défini).
