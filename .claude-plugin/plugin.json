@@ -1,7 +1,7 @@
 {
   "name": "netir",
   "description": "Cockpit Netir du freelance : consigne le carnet de mission en fin de session, et pilote devis et factures via le MCP Netir.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": { "name": "Netir" },
   "keywords": ["netir", "freelance", "carnet de mission", "mcp"],
   "hooks": "./hooks/hooks.json"
