@@ -1,8 +1,8 @@
-# Crée une release GitHub quand un tag vX.Y.Z est poussé sur le miroir.
+# Creates a GitHub release when a tag vX.Y.Z is pushed to the mirror.
 #
-# Le tag est poussé par la CI GitLab du monorepo (subtree split) via une clé de
-# déploiement. Un push par deploy key déclenche bien les workflows Actions (contrairement
-# au token intégré). La release utilise le GITHUB_TOKEN du runner : aucun secret à gérer.
+# The monorepo's GitLab CI pushes the tag (subtree split) with a deploy key, which, unlike
+# the built-in token, does trigger Actions workflows. The release uses the runner's
+# GITHUB_TOKEN: no secret to manage.
 name: release
 
 on:
