@@ -7,7 +7,7 @@
       "name": "netir",
       "source": ".",
       "description": "Cockpit Netir du freelance : consigne le carnet de mission en fin de session, et rappelle de le tenir à jour.",
-      "version": "0.1.3"
+      "version": "0.1.4"
     }
   ]
 }
